@@ -1,0 +1,59 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/dotnet_blazor_pwa_update.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        // {
+        //     "label": "publish",
+        //     "command": "dotnet",
+        //     "type": "process",
+        //     "args": [
+        //         "publish",
+        //         "${workspaceFolder}/dotnet_blazor_pwa_update.csproj",
+        //         "/property:GenerateFullPaths=true",
+        //         "/consoleloggerparameters:NoSummary;ForceNoAlign"
+        //     ],
+        //     "problemMatcher": "$msCompile"
+        // },
+        {
+            "label": "publish",
+            "type": "shell",
+            "command": "Remove-Item -Recurse -Force '${workspaceFolder}/publish' && dotnet publish -o '${workspaceFolder}/publish' && echo 完了",
+            "group": {
+                "kind": "none", //タスクの種類。"build" : ビルド,"test" :テスト,"none" :通常
+                "isDefault": false //同グループのタスクが複数ある際に規定タスクとするかどうか
+            },
+            "presentation": { //ターミナル画面の動作を制御する項目
+                "reveal": "always", //Terminal パネルを必ず開く
+                "clear": true, //実行前に Terminal をクリアするか
+                "echo": true, //タスク名を表示するか
+                "showReuseMessage": false
+                //「ターミナルはタスクによって再利用されます。
+                //  閉じるには任意のキーを押してください」を表示するかどうか
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "watch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/dotnet_blazor_pwa_update.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
