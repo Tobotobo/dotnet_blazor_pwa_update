@@ -9,6 +9,9 @@ window.updateAvailable = new Promise((resolve, reject) => {
     navigator.serviceWorker.register('/service-worker.js')
         .then(registration => {
             console.info(`Service worker registration successful (scope: ${registration.scope})`);
+            setInterval(() => { 
+                registration.update(); 
+            }, 5 * 1000);
             registration.onupdatefound = () => {
                 const installingServiceWorker = registration.installing;
                 installingServiceWorker.onstatechange = () => {

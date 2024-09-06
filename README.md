@@ -12,6 +12,11 @@ https://whuysentruit.medium.com/blazor-wasm-pwa-adding-a-new-update-available-no
 Blazor WASM PWA – Applications updates, cache busting with notification or force refresh  
 https://techcommunity.microsoft.com/t5/web-development/blazor-wasm-pwa-applications-updates-cache-busting-with/m-p/3920976  
 
+## 結果
+* 期待する動作(※)ができた  
+  ※更新があったら自動で通知が表示される　→　通知をクリックしたら更新される
+* あとは通知の見た目や更新のさせ方等、工夫すればいけそう
+
 ## 詳細
 
 ```
@@ -23,14 +28,12 @@ dotnet run
 dotnet publish -o ./publish/pwa
 ```
 
-## メモ
-
-### 素の状態
+## 素の状態
 * F5 では更新されない　※タブで表示していなくても F5 では更新されない
 * 当該PWAサイトを表示しているタブとインストールしたPWAアプリを閉じる  
   →　この状態で PWA アプリを起動するとその時に更新される
 
-### service-worker.published.js に skipWaiting() を追加
+## service-worker.published.js に skipWaiting() を追加
 
 wwwroot\service-worker.published.js
 ```js
@@ -45,10 +48,25 @@ async function onInstall(event) {
   ※上記の状態には自動的になるが、少し時間がかかる場合があり、まだ更新待機状態で無い場合 F5 しても更新されない？  
   ※何度か F5 押してると更新される
 
-### アップデート通知
+## アップデート通知
 * 前提：self.skipWaiting(); // 追加
 * publish\wwwroot\sw-registrator.js
 * Layout\WhateverYouCalledTheComponent.razor
 * 更新があったらページ上部に更新がある旨のポップアップが表示される仕組みを追加
 * 更新があったかのチェックが F5 等で更新された時かアプリを一旦閉じて次開いた時にしか行われていないっぽい
 * そこそこの時間待ったが自動ではポップアップされず...
+
+## アプリケーションの実行中に検出する
+
+Blazor WASM PWA — Adding a “New Update Available” notification  
+https://whuysentruit.medium.com/blazor-wasm-pwa-adding-a-new-update-available-notification-d9f65c4ad13  
+Detect while the application is running  
+
+* wwwroot\sw-registrator.js に以下を追加
+  ```
+  setInterval(() => {
+      registration.update();
+  }, 60 * 1000); // 60000ms -> check each minute
+  ```
+* 期待する動作(※)をすることを確認  
+  ※更新があったら自動で通知が表示される　→　通知をクリックしたら更新される
